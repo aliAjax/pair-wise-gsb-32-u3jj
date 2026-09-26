@@ -4,6 +4,12 @@ import { dayPlanApi } from '../api/dayPlanApi';
 import { messages } from '../constants/messages';
 import { toast } from '../utils/message';
 
+export interface ImportedDay {
+  day_index: number;
+  date: string;
+  items: DayPlanItem[];
+}
+
 export const useDayPlanStore = defineStore('dayPlan', {
   state: () => ({ dayPlans: dayPlanApi.list() as DayPlan[] }),
   actions: {
@@ -14,6 +20,18 @@ export const useDayPlanStore = defineStore('dayPlan', {
         this.dayPlans.push(day);
       }
       return day;
+    },
+    // 模板实例化时写入一整份深拷贝日程，与模板数据互不影响
+    importDays(tripId: string, days: ImportedDay[]) {
+      const copied: DayPlan[] = days.map((day) => ({
+        id: crypto.randomUUID(),
+        trip_id: tripId,
+        day_index: day.day_index,
+        date: day.date,
+        items: day.items.map((item) => ({ ...item })),
+      }));
+      this.dayPlans.push(...copied);
+      dayPlanApi.save(this.dayPlans);
     },
     addSpot(tripId: string, spotId: string, dayIndex = 1) {
       const day = this.ensureDay(tripId, dayIndex);
@@ -30,4 +48,3 @@ export const useDayPlanStore = defineStore('dayPlan', {
     },
   },
 });
-

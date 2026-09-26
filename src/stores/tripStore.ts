@@ -5,6 +5,16 @@ import { tripApi } from '../api/tripApi';
 import { messages } from '../constants/messages';
 import { toast } from '../utils/message';
 
+export interface NewTripInput {
+  title: string;
+  destination: string;
+  start_date: string;
+  end_date: string;
+  budget: number;
+  currency: string;
+  members: string[];
+}
+
 export const useTripStore = defineStore('trip', {
   state: () => ({ trips: tripApi.list() as Trip[], statusFilter: 'all' as TripStatus | 'all' }),
   getters: {
@@ -29,6 +39,18 @@ export const useTripStore = defineStore('trip', {
       toast.ok(messages.tripCreated);
       return trip.id;
     },
+    // 由模板新建行程时调用：只接收模板资料 + 新日期，返回新行程 id
+    addTrip(input: NewTripInput) {
+      const trip: Trip = {
+        id: crypto.randomUUID(),
+        ...input,
+        status: TripStatus.PLANNING,
+        created_at: new Date().toISOString(),
+      };
+      this.trips.unshift(trip);
+      tripApi.save(this.trips);
+      return trip.id;
+    },
     removeTrip(id: string) {
       this.trips = this.trips.filter((trip) => trip.id !== id);
       tripApi.save(this.trips);
@@ -36,4 +58,3 @@ export const useTripStore = defineStore('trip', {
     },
   },
 });
-

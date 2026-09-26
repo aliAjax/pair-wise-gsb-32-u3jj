@@ -3,6 +3,7 @@
     <nav class="app-nav">
       <strong>TripWeaver</strong>
       <RouterLink to="/trips">我的旅行</RouterLink>
+      <RouterLink to="/templates">旅行模板</RouterLink>
       <RouterLink to="/spots">景点探索</RouterLink>
       <RouterLink to="/share">分享预览</RouterLink>
       <el-select v-model="themeStore.theme" size="small" @change="themeStore.setTheme" style="width: 120px">

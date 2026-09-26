@@ -3,6 +3,9 @@
     <h1>我的旅行</h1>
     <div class="toolbar">
       <el-button type="primary" @click="create">新建旅行</el-button>
+      <RouterLink to="/templates">
+        <el-button>从旅行模板新建</el-button>
+      </RouterLink>
       <el-select v-model="tripStore.statusFilter" style="width: 160px">
         <el-option label="全部状态" value="all" />
         <el-option v-for="item in TRIP_STATUS_OPTIONS" :key="item.value" :label="item.label" :value="item.value" />

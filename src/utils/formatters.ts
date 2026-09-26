@@ -14,6 +14,21 @@ export const tripStatusText: Record<TripStatus, string> = {
   [TripStatus.FINISHED]: '已结束',
 };
 export const transportText: Record<string, string> = { walk: '步行', metro: '地铁', taxi: '出租', train: '火车' };
+export const TRANSPORT_OPTIONS = Object.entries(transportText).map(([value, label]) => ({ value, label }));
 export const formatDate = (value: string) => dayjs(value).format('YYYY-MM-DD');
 export const formatCurrency = (value: number, currency = 'CNY') => new Intl.NumberFormat('zh-CN', { style: 'currency', currency }).format(value);
+
+// 停留时长：由起止时刻折算，分钟不足 1 小时按分钟展示
+export function formatDuration(startTime: string, endTime: string): string {
+  const [startHour, startMinute] = startTime.split(':').map(Number);
+  const [endHour, endMinute] = endTime.split(':').map(Number);
+  if ([startHour, startMinute, endHour, endMinute].some(Number.isNaN)) return '时长待定';
+  let minutes = endHour * 60 + endMinute - (startHour * 60 + startMinute);
+  if (minutes <= 0) return '时长待定';
+  const hours = Math.floor(minutes / 60);
+  minutes %= 60;
+  if (hours && minutes) return `${hours} 小时 ${minutes} 分钟`;
+  if (hours) return `${hours} 小时`;
+  return `${minutes} 分钟`;
+}
 
