@@ -28,6 +28,10 @@ export const useDayPlanStore = defineStore('dayPlan', {
       if (moved) day.items.splice(to, 0, moved);
       dayPlanApi.save(this.dayPlans);
     },
+    importDayPlans(plans: DayPlan[]) {
+      this.dayPlans.push(...plans);
+      dayPlanApi.save(this.dayPlans);
+    },
   },
 });
 

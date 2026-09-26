@@ -34,6 +34,10 @@ export const useTripStore = defineStore('trip', {
       tripApi.save(this.trips);
       toast.ok(messages.tripDeleted);
     },
+    importTrip(trip: Trip) {
+      this.trips.unshift(trip);
+      tripApi.save(this.trips);
+    },
   },
 });
 

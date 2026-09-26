@@ -5,6 +5,7 @@
       <el-button type="primary" @click="router.push('/spots')">添加景点</el-button>
       <el-button @click="router.push('/planner/' + trip.id + '/1')">编排第 1 天</el-button>
       <el-button @click="router.push('/share')">分享预览</el-button>
+      <el-button @click="saveTemplate">保存为模板</el-button>
     </div>
     <section class="grid">
       <BudgetChart :spent="stats.value.budget.spent" :remaining="stats.value.budget.remaining" />
@@ -20,6 +21,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useTripStore } from '../stores/tripStore';
 import { useSpotStore } from '../stores/spotStore';
 import { useDayPlanStore } from '../stores/dayPlanStore';
+import { useTripTemplateStore } from '../stores/tripTemplateStore';
 import { useTripStats } from '../hooks/useTripStats';
 import TripHeader from '../components/common/TripHeader.vue';
 import DayTimeline from '../components/common/DayTimeline.vue';
@@ -30,8 +32,10 @@ const router = useRouter();
 const tripStore = useTripStore();
 const spotStore = useSpotStore();
 const dayPlanStore = useDayPlanStore();
+const templateStore = useTripTemplateStore();
 const trip = computed(() => tripStore.trips.find((item) => item.id === route.params.id));
 const tripDays = computed(() => dayPlanStore.dayPlans.filter((day) => day.trip_id === route.params.id));
 const stats = computed(() => trip.value ? useTripStats(trip.value, dayPlanStore.dayPlans, spotStore.spots) : { value: { days: 0, spotCount: 0, budget: { spent: 0, remaining: 0, warning: '' } } });
+function saveTemplate() { if (trip.value) templateStore.saveFromTrip(trip.value, dayPlanStore.dayPlans); }
 </script>
 

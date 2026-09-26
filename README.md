@@ -14,7 +14,8 @@ TripWeaver 是一款纯前端旅行规划应用，支持创建旅行、探索景
 ## 主要功能
 
 - 我的旅行：创建、筛选、删除旅行计划。
-- 行程详情：查看每日行程、预算图表和共享时间线。
+- 行程详情：查看每日行程、预算图表和共享时间线，可一键保存为旅行模板。
+- 旅行模板：列表预览每天景点与合计预算，可删除不用的模板；从模板新建时填写起止日期，日程按天数平移，天数对不上会提示缺口并阻止创建。
 - 景点探索：按 SpotCategory 搜索和筛选，收藏并加入行程。
 - 行程编排：SortableJS 拖拽排序，实时影响预算计算。
 - 分享预览：生成可复制的行程文本。
@@ -51,6 +52,8 @@ src/
 ## 数据持久化
 
 本地数据通过 `utils/storage.ts` 统一写入 localStorage，并保留 Dexie 数据库对象用于后续 IndexedDB 扩展。版本键来自 `constants/storageVersion.ts`。
+
+旅行模板按职责拆分为三层：模板资料结构在 `models/tripTemplate.ts`，起止日期与模板天数的换算、缺口校验和日程平移在 `utils/templateSchedule.ts`，本地读写在 `api/tripTemplateApi.ts`（存储键 `tripweaver-v1:templates`）。模板与已建行程均为深拷贝，互不影响。
 
 ## 环境变量
 
